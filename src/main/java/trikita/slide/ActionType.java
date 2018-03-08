@@ -12,6 +12,7 @@ public enum ActionType {
     NEXT_PAGE,
     PREV_PAGE,
 
+    SAVE_DOCUMENT,
     OPEN_DOCUMENT,
     LOAD_DOCUMENT,
     PICK_IMAGE,

@@ -32,6 +32,7 @@ import trikita.slide.ui.Style;
 
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
+    public static final int SAVE_DOCUMENT_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
     public static final int EXPORT_PDF_REQUEST_CODE = 46;
 
@@ -92,6 +93,11 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             dumpToFile(false);
             openDocument((Activity) action.value);
             return;
+            //Added to call the savedoc
+        } else if (action.type == ActionType.SAVE_DOCUMENT) {
+            dumpToFile(false);
+            saveDoc((Activity) action.value);
+            return;
         } else if (action.type == ActionType.LOAD_DOCUMENT) {
             String doc = loadDocument((Uri) action.value);
             if (doc != null) {
@@ -133,8 +139,17 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             }
         }
     }
-
+    //Changed CREATE TO OPEN in order to use that function for reading purposes only
     private void openDocument(Activity a) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TITLE, a.getString(R.string.default_new_doc_name));
+        a.startActivityForResult(intent, OPEN_DOCUMENT_REQUEST_CODE);
+    }
+
+    //NewFunction for Saving
+    private void saveDoc(Activity a) {
         Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/plain");

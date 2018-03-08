@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.WindowManager;
 
 import trikita.jedux.Action;
 import trikita.promote.Promote;
@@ -18,6 +19,8 @@ public class MainActivity extends Activity {
         super.onCreate(b);
         setContentView(new MainLayout(this));
         App.getWindowController().setWindow(getWindow());
+        //Fixing the keyboard Issue #10
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
 
     @Override
@@ -63,6 +66,10 @@ public class MainActivity extends Activity {
         } else if (requestCode == StorageController.OPEN_DOCUMENT_REQUEST_CODE) {
             Uri uri = data.getData();
             App.dispatch(new Action<>(ActionType.LOAD_DOCUMENT, uri));
+        }   //Adding the save function
+            else if (requestCode == StorageController.SAVE_DOCUMENT_REQUEST_CODE) {
+            Uri uri = data.getData();
+            App.dispatch(new Action<>(ActionType.SAVE_DOCUMENT, uri));
         }
     }
 }
