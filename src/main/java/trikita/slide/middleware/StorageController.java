@@ -1,17 +1,23 @@
 package trikita.slide.middleware;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,11 +36,14 @@ import trikita.slide.Slide;
 import trikita.slide.State;
 import trikita.slide.ui.Style;
 
+import static android.app.Activity.RESULT_OK;
+
 public class StorageController implements Store.Middleware<Action<ActionType, ?>, State> {
     public static final int OPEN_DOCUMENT_REQUEST_CODE = 43;
     public static final int SAVE_DOCUMENT_REQUEST_CODE = 43;
     public static final int PICK_IMAGE_REQUEST_CODE = 44;
     public static final int EXPORT_PDF_REQUEST_CODE = 46;
+    public static final int OPEN_PDF_REQUEST_CODE = 47;
 
     private static final long FILE_WRITER_DELAY = 3000; // 3sec
 
@@ -69,11 +78,18 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             dumpToFile(false);
             createPdf((Activity) action.value);
             return;
+        } //OPEN PDF
+          else if (action.type == ActionType.OPEN_PDF) {
+            openPdf((Activity) action.value);
+            return;
         } else if (action.type == ActionType.EXPORT_PDF) {
             new PdfExportTask(store, (Uri) action.value).execute();
             return;
         } else if (action.type == ActionType.PICK_IMAGE) {
             pickImage((Activity) action.value);
+            return;
+        } else if (action.type == ActionType.EXIT_APP) {
+             ExitApp((Activity) action.value);
             return;
         } else if (action.type == ActionType.INSERT_IMAGE) {
             String s = store.getState().text();
@@ -139,6 +155,13 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             }
         }
     }
+    //Exiting App
+    private void ExitApp(Activity a)
+    {
+        a.finishAffinity();
+        System.exit(0);
+    }
+
     //Changed CREATE TO OPEN in order to use that function for reading purposes only
     private void openDocument(Activity a) {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -177,6 +200,18 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
                 try { is.close(); } catch (IOException e) {}
             }
         }
+    }
+
+    //OpenPDF
+    private void openPdf(Activity a)
+    {
+        Intent chooseFile;
+        Intent intent;
+        chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
+        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
+        chooseFile.setType("application/pdf");
+        intent = Intent.createChooser(chooseFile, "Select PDF");
+        a.startActivityForResult(intent, OPEN_PDF_REQUEST_CODE);
     }
 
     private void createPdf(Activity a) {
