@@ -19,6 +19,5 @@
     <string name="om_style">Style</string>
     <string name="om_settings">Settings</string>
     <string name="om_export_pdf">Export to PDF</string>
-    <string name="om_open_pdf">Open PDF</string>
     <string name="om_exit_app">Exit</string>
 </resources>

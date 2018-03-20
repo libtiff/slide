@@ -78,10 +78,6 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
             dumpToFile(false);
             createPdf((Activity) action.value);
             return;
-        } //OPEN PDF
-          else if (action.type == ActionType.OPEN_PDF) {
-            openPdf((Activity) action.value);
-            return;
         } else if (action.type == ActionType.EXPORT_PDF) {
             new PdfExportTask(store, (Uri) action.value).execute();
             return;
@@ -200,18 +196,6 @@ public class StorageController implements Store.Middleware<Action<ActionType, ?>
                 try { is.close(); } catch (IOException e) {}
             }
         }
-    }
-
-    //OpenPDF
-    private void openPdf(Activity a)
-    {
-        Intent chooseFile;
-        Intent intent;
-        chooseFile = new Intent(Intent.ACTION_GET_CONTENT);
-        chooseFile.addCategory(Intent.CATEGORY_OPENABLE);
-        chooseFile.setType("application/pdf");
-        intent = Intent.createChooser(chooseFile, "Select PDF");
-        a.startActivityForResult(intent, OPEN_PDF_REQUEST_CODE);
     }
 
     private void createPdf(Activity a) {

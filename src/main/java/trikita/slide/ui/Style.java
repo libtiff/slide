@@ -35,8 +35,8 @@ public class Style {
         {0xffffffff, 0xffe91e63, R.drawable.light_round_button, 0xff333333},    // white on pink
         {0xffffffff, 0xff00FF00, R.drawable.light_round_button, 0xff333333},    // white on limegreen
         {0xffffffff, 0xff9932CC, R.drawable.light_round_button, 0xff333333},    //white on darkorchid
-        {0xff222222, 0xffFFDF00, R.drawable.light_round_button, 0xffeeeeee},    //black on gold yellow
-        {0xff222222, 0xffD2691E, R.drawable.light_round_button, 0xffeeeeee},    //white on chocolate brown
+        {0xff222222, 0xffFFDF00, R.drawable.light_round_button, 0xff333333},    //black on gold yellow
+        {0xff222222, 0xffD2691E, R.drawable.light_round_button, 0xff333333},    //white on chocolate brown
 
     };
 

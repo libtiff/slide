@@ -20,6 +20,5 @@ public enum ActionType {
     SET_COLOR_SCHEME,
     CREATE_PDF,
     EXPORT_PDF,
-    OPEN_PDF,
     EXIT_APP
 }
